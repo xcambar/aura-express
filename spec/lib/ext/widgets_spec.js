@@ -211,6 +211,39 @@ define(['aura/aura', 'aura/ext/widgets'], function(aura, ext) {
     });
   });
 
+  describe("Extending widgets", function () {
+    var app, widgetExtend;
+    before(function (done) {
+      app = aura(appConfig);
+      app.start().then(function () {
+        widgetExtend = app.core.Widgets.extend;
+        done();
+      });
+    });
 
+    it("should have a function to allow the procedure", function () {
+      widgetExtend.should.be.a('function');
+    });
+
+    it("should add it to the defined AMD modules", function (done) {
+      var widgetRef = '__widget__$sub@default';
+      widgetExtend('sub', 'dummy', { foo: 'bar' }).then(function(widget) {
+        console.log("THEN", widget);
+        var a_sub_widget = require(widgetRef);
+        a_sub_widget.foo.should.equal('bar');
+        done();
+      });
+    });
+
+    // it("should load unloaded modules", function (done) {
+    //   var widgetRef = '__widget__$sub@default';
+    //   widgetExtend('sub', 'dummy2', { foo: 'bar' }).then(function(widget) {
+    //     console.log("THEN", widget);
+    //     var a_sub_widget = require(widgetRef);
+    //     a_sub_widget.foo.should.equal('bar');
+    //     done();
+    //   });
+    // });
+  });
 
 });
